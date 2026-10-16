@@ -1,0 +1,7 @@
+.env
+*.log
+__pycache__/
+*.pyc
+state.db*
+gateway_state.json
+auth.json
