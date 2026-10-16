@@ -1,14 +1,15 @@
 ---
 name: delegation-playbook
-description: "Use when fanning out delegate_task subagents."
+description: "Slot-aware rules for delegate_task fan-outs and steering."
 version: 1.0.0
-author: Hermes Agent
+author: Khai Dong Nguyen (PawnmasterII), Hermes Agent
 category: devops
 license: MIT
-platforms: [windows]
+platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [delegation, subagents, concurrency, electronhub]
+    related_skills: [delegation-slot-config]
 ---
 
 # Subagent delegation playbook (ElectronHub DevPass Turbo)

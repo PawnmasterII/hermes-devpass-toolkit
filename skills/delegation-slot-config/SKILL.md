@@ -1,14 +1,15 @@
 ---
 name: delegation-slot-config
-description: "Use when configuring delegation or tracking DevPass slots."
+description: "Configure delegation and track DevPass slot headroom."
 version: 1.0.0
-author: Hermes Agent
+author: Khai Dong Nguyen (PawnmasterII), Hermes Agent
 category: devops
 license: MIT
-platforms: [windows]
+platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [delegation, slots, electronhub, concurrency, config]
+    related_skills: [delegation-playbook]
 ---
 
 # Delegation slot configuration & tracking (ElectronHub DevPass)
