@@ -3,16 +3,16 @@ name: delegation-playbook
 description: "Slot-aware rules for delegate_task fan-outs and steering."
 version: 1.0.0
 author: Khai Dong Nguyen (PawnmasterII), Hermes Agent
-category: devops
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [delegation, subagents, concurrency, electronhub]
+    category: devops
     related_skills: [delegation-slot-config]
 ---
 
-# Subagent delegation playbook (ElectronHub DevPass Turbo)
+# Subagent delegation playbook (ElectronHub DevPass)
 
 Verified 2026-10-15 against docs.electronhub.ai/billing/coding-plan + live probes of your ek-dev- key.
 
@@ -20,10 +20,10 @@ Verified 2026-10-15 against docs.electronhub.ai/billing/coding-plan + live probe
 Load whenever a task could spawn parallel delegate_task children on this machine, when a delegation 429/stall needs diagnosing, or when the user wants input delivered to running subagents.
 
 ## Slot math (the hard constraint)
-- The ek-dev- key has **5 concurrency slots TOTAL, shared by the parent session and all children**. PROVEN cross-model 2026-10-15: with 5 long glm-5.3-flash requests in flight, a deepseek-v4.1-flash request also got 429 RetryAfter=3 — the pool is per-KEY, not per-model; no model choice or mixing increases it.
+- The DevPass key has a fixed slot pool (Lite 2 / Turbo 5) TOTAL, shared by the parent session and all children**. PROVEN cross-model 2026-10-15: with 5 long glm-5.3-flash requests in flight, a deepseek-v4.1-flash request also got 429 RetryAfter=3 — the pool is per-KEY, not per-model; no model choice or mixing increases it.
 - Slot cost per request: `glm-5.3:dev` (Heavy) = **2**. Every other :dev model (`glm-5.3-flash`, `deepseek-v4-flash`, `deepseek-v4-flash-0731`, `mimo-v2.5`, `deepseek-v4.1-flash`, `qwen3.8-27b`, `minimax-m2.7`) = **1**.
 - Child model is pinned via `delegation.model` in config.yaml — currently **`deepseek-v4.1-flash:dev`** (user's pick: strongest 1-slot :dev). Probe-verified 2026-10-15: 4-parallel all 200s in ~2.6s. If unset, children inherit the parent's model.
-- Default layout: **max 4 children** (`delegation.max_concurrent_children: 4`) — 1 slot reserved for the parent's next turn / user interjection. 5 only when the parent provably stays idle.
+- Default layout: **max children = slots − 1** (Turbo: 4 via `delegation.max_concurrent_children: 4`; Lite: 1) — one slot reserved for the parent's next turn / user interjection.
 - Never route children to `glm-5.3:dev`: two Heavy children eat 4 of 5 slots.
 - `429` + `Retry-After: 3` = slots (or burst) exhausted. Hermes queues/retries, but sustained contention killed a real child (real incident: stale-watchdog abort after 5 silent attempts). Don't oversubscribe.
 - RPM 20 (burst 8) is rarely binding for agent loops; slots bind first.

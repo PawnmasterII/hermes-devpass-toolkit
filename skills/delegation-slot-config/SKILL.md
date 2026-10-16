@@ -3,12 +3,12 @@ name: delegation-slot-config
 description: "Configure delegation and track DevPass slot headroom."
 version: 1.0.0
 author: Khai Dong Nguyen (PawnmasterII), Hermes Agent
-category: devops
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [delegation, slots, electronhub, concurrency, config]
+    category: devops
     related_skills: [delegation-playbook]
 ---
 
@@ -28,7 +28,7 @@ hermes config get delegation   # verify both took
 Never exceed 4 children while the user's session is live: parent turn + 4 children = 5/5. If the user will be idle (long unattended batch), 5 children is allowed — but re-check 429s after any user interjection.
 
 ## 2. Slot ledger (maintain every fan-out)
-Track: `SLOTS_TOTAL=5 (Turbo) | glm-5.3:dev=2 | all other :dev=1 | parent live turn=1`. The ledger is a claim, not a guess — verify with a probe before declaring headroom:
+Track: `SLOTS_TOTAL=5 (Turbo; 2 on Lite) | glm-5.3:dev=2 | all other :dev=1 | parent live turn=1`. The ledger is a claim, not a guess — verify with a probe before declaring headroom:
 ```python
 # Probe current key headroom (run before/at fan-out start and after batch):
 import json, re, urllib.request
