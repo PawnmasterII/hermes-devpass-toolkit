@@ -31,7 +31,7 @@ Track: `SLOTS_TOTAL=5 (Turbo) | glm-5.3:dev=2 | all other :dev=1 | parent live t
 ```python
 # Probe current key headroom (run before/at fan-out start and after batch):
 import json, re, urllib.request
-env = open(r"C:/Users/dongt/AppData/Local/hermes/.env", encoding="utf-8").read()
+env = open(r"$HERMES_HOME/.env", encoding="utf-8").read()
 dev = dict(re.findall(r'^([A-Z_]+)=(.+)$', env, re.M))["ELECTRONHUB_API_KEY"].strip()
 req = urllib.request.Request("https://api.electronhub.ai/v1/chat/completions",
     data=json.dumps({"model":"glm-5.3-flash:dev","messages":[{"role":"user","content":"Say OK"}],"max_tokens":4}).encode(),
@@ -58,4 +58,4 @@ Kill rules:
 - After any kill: re-run the scan; expect exactly the desktop tree to remain. Then probe (section 2) to confirm the key still answers 200.
 
 ## 4. Verify after configuring
-One real `delegate_task` dispatch with 2 trivial tasks; check the batch manifest (`cache/delegation/live/<id>/manifest.json`) shows the intended `model`, children return 200s, and no 429s appear in the batch result or the agent log (`AppData/Local/hermes/logs/agent.log`). Children self-reporting their model id is the end-to-end proof.
+One real `delegate_task` dispatch with 2 trivial tasks; check the batch manifest (`cache/delegation/live/<id>/manifest.json`) shows the intended `model`, children return 200s, and no 429s appear in the batch result or the agent log (`$HERMES_HOME/logs/agent.log`). Children self-reporting their model id is the end-to-end proof.
